@@ -1,0 +1,34 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Profile</title>
+    <link rel="stylesheet" href="profile.css" />
+    <link rel="stylesheet" href="Header.css" />  <!-- Global stylesheet for header -->
+    <link rel="stylesheet" href="index.css">
+</head>
+<body>
+    <div id="Header"></div>
+    <div class="profile-card">
+        <img src="https://www.profilebakery.com/wp-content/uploads/2023/04/ai-professional-headshot-6.jpg" alt="">
+        <div>
+            <h2>Name: John Doe</h2>
+            <h2>Username: John_Doe</h2>
+            <h2>Email: JohnDoe@gmail.com</h2>
+        </div>
+    </div>
+    
+    
+    
+    <script>
+        // Function to fetch and load the navbar
+        fetch('Header.html')
+            .then(response => response.text())
+            .then(data => {
+                document.getElementById('Header').innerHTML = data;
+            })
+            .catch(error => console.error('Error loading navbar:', error));
+    </script>
+</body>
+</html>
