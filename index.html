@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+    <title>Course Control</title>
+    <link rel="stylesheet" href="index.css" />
+    <link rel="stylesheet" href="Header.css">
+</head>
+<body>
+    <div id="Header"></div>
+    <div id="Card"></div>
+
+    <!-- Your page content -->
+
+    <script>
+        // Function to fetch and load the navbar
+        fetch('Header.html')
+            .then(response => response.text())
+            .then(data => {
+                document.getElementById('Header').innerHTML = data;
+            })
+            .catch(error => console.error('Error loading navbar:', error));
+        fetch('Card.html')
+            .then(response => response.text())
+            .then(data => {
+                document.getElementById('Card').innerHTML = data;
+            })
+            .catch(error => console.error('Error loading cards:', error));
+    </script>
+</body>
+</html>
