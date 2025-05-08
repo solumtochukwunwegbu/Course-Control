@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Profile</title>
+    <link rel="stylesheet" href="profile.css" />
+    <link rel="stylesheet" href="Header.css" />  <!-- Global stylesheet for header -->
+    <link rel="stylesheet" href="index.css">
+</head>
+<body>
+    <div id="Header"></div>
+    <div class="profile-card">
+        <img src="https://www.profilebakery.com/wp-content/uploads/2023/04/ai-professional-headshot-6.jpg" alt="">
+        <div>
+            <h2>username: <p id="username"></p></h2>
+            <h2>email: <p id="email"></p></h2>
+            <h2>password: <p id="password"></p></h2>
+        </div>
+    </div>
+    <div id="Footer"></div>
+    
+    
+    <script src="Layout.js"></script>
+    <script>
+        
+        window.onload = function(){
+            const username = sessionStorage.getItem("username");
+            const email = sessionStorage.getItem("email");
+            const password = sessionStorage.getItem("password");
+            // Display the retrieved values on the page
+            document.getElementById("username").textContent = username ? username : "Not set";
+            document.getElementById("email").textContent = email ? email : "Not set";
+            document.getElementById("password").textContent = password ? password : "Not set";
+            insertLayout();
+        };
+        // Function to fetch and load the navbar
+    </script>
+</body>
+</html>

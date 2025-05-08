@@ -1,0 +1,34 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+
+<body>
+
+<h1>Welcome to the Site</h1>
+
+<script>
+  // Check if user data exists in localStorage
+  if (!localStorage.getItem("userData")) {
+    const name = prompt("Enter your name:");
+    const email = prompt("Enter your email:");
+
+    if (name && email) {
+      const userData = { name, email };
+      localStorage.setItem("userData", JSON.stringify(userData));
+      alert("Thank you! Redirecting to profile...");
+      window.location.href = "profile.html";
+    } else {
+      alert("Both name and email are required.");
+    }
+  } else {
+    window.location.href = "profile.html";
+  }
+</script>
+
+    
+</body>
+</html>
