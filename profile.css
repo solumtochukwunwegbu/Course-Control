@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 .profile-card {
     display: flex;
     flex-direction: column;
@@ -15,3 +16,22 @@
     object-fit: cover;
     margin-bottom: 20px;
 }
+=======
+.profile-card {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center; /* center the content inside */
+    /* width: 300px; */
+    margin: 50px auto; /* center horizontally */
+}
+
+.profile-card img{
+    border-radius: 20px;
+    overflow: hidden; /* prevents image from poking out */
+    width: 300px;
+    height: 300px;
+    object-fit: cover;
+    margin-bottom: 20px;
+}
+>>>>>>> 3a9763afadb49c5a67968d3e3d285cf5c09a1e44
