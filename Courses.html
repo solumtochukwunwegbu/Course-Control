@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Courses</title>
+    <link rel="stylesheet" href="Courses.css">
+</head>
+<body>
+    <div id="Header"></div>
+    <div class="Main">
+        <p>Placeholder</p>
+
+        <!-- Video wrapper with overlay -->
+        <div class="video-wrapper" onclick="showPaymentPopup()">
+            <div id="videoOverlay" class="video-overlay">
+                <div>Click to unlock video</div>
+            </div>
+            <iframe class="vid" src="https://www.youtube.com/embed/NpEaa2P7qZI"></iframe>
+        </div>
+
+        <p>Rating :</p>
+        <p>Description:</p>
+    </div>
+
+    <!-- Payment Popup -->
+    <div id="paymentPopup" class="payment-popup">
+        <button class="close-btn" onclick="closePopup()">×</button>
+        <p>This course requires payment to unlock. Proceed?</p>
+        <button onclick="payAndUnlock()">Pay</button>
+    </div>
+    <div id="Footer"></div>
+
+
+    <script src="Layout.js"></script>
+    <script>
+        function showPaymentPopup() { document.getElementById('paymentPopup').style.display = 'block'; }
+        function closePopup() { document.getElementById('paymentPopup').style.display = 'none'; }
+        function payAndUnlock() { document.getElementById('videoOverlay').style.display = 'none'; closePopup(); }
+        insertLayout();
+        
+    </script>
+</body>
+</html>
