@@ -1,3 +1,22 @@
+const mysql = require('mysql2');
+const connection = mysql.createConnection({
+  host: 'localhost',
+  user: 'root',
+  password: '',
+  database: 'coursecontrol'
+});
+
+connection.connect(
+  function(err) {
+  if (err) {
+    throw err;
+  }
+  console.log('Connected to MySQL!');
+  }
+);
+
+
+
 // Import the express module
 const express = require('express');
 const app = express();

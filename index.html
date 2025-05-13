@@ -107,22 +107,22 @@
             }
         };
     
-        
+
     // Read the course name from the URL
     const params = new URLSearchParams(location.search);
     const course = params.get("course");
 
     // Define the content for each course
-    const courses = {
-      coding: {
-        title: "Coding Course",
-        description: "Learn HTML, CSS, JavaScript, and build websites from scratch."
-      },
-      economics: {
-        title: "Economics Course",
-        description: "Understand economic principles, markets, and decision-making."
-      }
-    };
+            // const courses = {
+            //   coding: {
+            //     title: "Coding Course",
+            //     description: "Learn HTML, CSS, JavaScript, and build websites from scratch."
+            //   },
+            //   economics: {
+            //     title: "Economics Course",
+            //     description: "Understand economic principles, markets, and decision-making."
+            //   }
+            // };
 
     // Update the page with the course content
     if (courses[course]) {
