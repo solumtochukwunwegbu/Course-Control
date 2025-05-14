@@ -64,49 +64,20 @@
         }
     
         window.onload = function () {
-            // Call insertLayout manually here
-            insertLayout();
-
-
-
-
     
             const username = sessionStorage.getItem("username");
             const email = sessionStorage.getItem("email");
             const password = sessionStorage.getItem("password");
     
-            if (!username || !email || !password) {
+            // if (!username || !email || !password) {
+            //     document.getElementById("overlay").style.display = "flex";
+            // } else {
+            //     document.getElementById("overlay").style.display = "none";
+            // }
+               if (!username || !email || !password) {
                 document.getElementById("overlay").style.display = "flex";
-            } else {
-                document.getElementById("overlay").style.display = "none";
             }
         };
-    
-
-    // Read the course name from the URL
-    const params = new URLSearchParams(location.search);
-    const course = params.get("course");
-
-    // Define the content for each course
-            // const courses = {
-            //   coding: {
-            //     title: "Coding Course",
-            //     description: "Learn HTML, CSS, JavaScript, and build websites from scratch."
-            //   },
-            //   economics: {
-            //     title: "Economics Course",
-            //     description: "Understand economic principles, markets, and decision-making."
-            //   }
-            // };
-
-    // Update the page with the course content
-    if (courses[course]) {
-      document.getElementById("title").textContent = courses[course].title;
-      document.getElementById("description").textContent = courses[course].description;
-    } else {
-      document.getElementById("title").textContent = "Course Not Found";
-      document.getElementById("description").textContent = "Sorry, we couldn’t find that course.";
-    }
  
     </script>
     

@@ -76,7 +76,7 @@ button:focus-visible {
   
     /* The overlay */
 #overlay {
-  display: flex;
+  display: none;
   justify-content: center;
   align-items: center;
   position: fixed;
@@ -158,11 +158,11 @@ flex: 1;
 
 .card a{
   color: white;
-  padding-inline: 20px;
+  padding-inline: 10px;
   font-size: 20px;
 }
 .card p {
-  padding-inline: 20px;
+  padding-inline: 10px;
 }  
 .card a:hover {
   text-decoration: underline;

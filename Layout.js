@@ -1,71 +1,74 @@
 function insertLayout() {
     // Inject CSS styles
-    const style = document.createElement("style");
-    style.textContent = `
-      /* src/components/Header/Header.css */
-.header-container {
-    display: flex;
-    align-items: center;
-    color: white;
-    justify-content: space-between;
-  }
-  
-  .logo {
-    font-size: 45px;
-    font-weight: bolder;
-    font-family: serif;
-    /* cursor: pointer; */
-  }
-  
-  .nav {
-    display: flex;
-    gap: 40px;
-    cursor: pointer;
-  }
-  
-  .nav-link {
-    color: white;
-    text-decoration: none;
-    font-size: 18px;
-  }
-  
-  .nav-link:hover {
-    text-decoration: underline;
-    color: gray;
-    transition: color 0.25s ease;}
+    document.head.innerHTML += 
+    `<style>
+              /* src/components/Header/Header.css */
+          .header-container {
+              display: flex;
+              align-items: center;
+              color: white;
+              justify-content: space-between;
+            }
+            
+            .logo {
+              font-size: 45px;
+              font-weight: bolder;
+              font-family: serif;
+              /* cursor: pointer; */
+            }
+            
+            .nav {
+              display: flex;
+              gap: 40px;
+              cursor: pointer;
+            }
+            
+            .nav-link {
+              color: white;
+              text-decoration: none;
+              font-size: 18px;
+            }
+            
+            .nav-link:hover {
+              text-decoration: underline;
+              color: gray;
+              transition: color 0.25s ease;}
+            
+            
+            .site-footer {
+              text-align: center;
+              padding: 20px;
+              margin-top: 40px;
+              background-color: #242424;
+              border-top: solid white 1px;
+              color: #333;
+              font-family: Arial, sans-serif;
+              font-size: 14px;
+              color: white;
+            }
+            
+            .site-footer a {
+              text-decoration: none;
+              cursor: pointer;
+              color: white;
+            }
+            
+            .site-footer a:hover {
+              text-decoration: underline;
+            }
+              
+    </style>`;
+
    
-   
-   .site-footer {
-    text-align: center;
-    padding: 20px;
-    margin-top: 40px;
-    background-color: #242424;
-    border-top: solid white 1px;
-    color: #333;
-    font-family: Arial, sans-serif;
-    font-size: 14px;
-    color: white;
-  }
-  
-  .site-footer a {
-    text-decoration: none;
-    cursor: pointer;
-    color: white;
-  }
-  
-  .site-footer a:hover {
-    text-decoration: underline;
-  }
-    `;
-    document.head.appendChild(style);
-  
+
+
     // Header HTML
     const headerHTML = `
     <header class="header-container">
     <h1 class="logo">Course Control</h1>
     <nav class="nav">
-        <a class="nav-link" href="index.html">Home</a>
-        <a class="nav-link" href="profile.html">Profile</a>
+        <a class="nav-link" href="/">Home</a>
+        <a class="nav-link" href="/profile">Profile</a>
     </nav>
     </header>
     `;
@@ -86,3 +89,5 @@ function insertLayout() {
     document.getElementById("Footer").innerHTML = footerHTML;
   }
   
+
+  insertLayout();
