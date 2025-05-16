@@ -9,8 +9,10 @@ const mysql = require('mysql2');
 
 
 // Import the ejs module
-app.set("view engine","ejs");
-app.set('views', __dirname);
+const path = require('path');
+app.set('views', path.join(__dirname)); // This makes Express look in the root folder
+app.set('view engine', 'ejs');
+
 
 //Import the bodyParser
 const bodyParser = require("body-parser");
@@ -68,18 +70,43 @@ app.get('/', (req, res) => {
   });
 });
 
-app.get('/courses', function (req, res) {
-  connection.query('SELECT * FROM course', function (err, results) {
-    if (err) throw err;
-    res.render('courses', { course: results });
+app.get('/courses', function(req, res) {
+  res.send('hey');
+  
   });
-});
+
+
+
+
+
+
+// app.get('/courses/:titleID', (req, res) => {
+//   // const titleID = req.params.titleID;
+//   const sql = 'SELECT * FROM course';
+//   connection.query(sql, (err, results) => {
+//     if (err) throw err;
+
+  // connection.query('SELECT * FROM course WHERE titleID = ?', [titleID], function (err, results) {
+  //   if (err) throw err;
+
+  //   if (results.length === 0) {
+  //     return res.status(404).send('Course not found');
+  //   }
+
+    // Still pass as an array
+//     res.render('courses', { course: results });
+//   });
+// });
+
+
+
+
+
 
 app.get('/profile', function (req, res) {
-  connection.query('SELECT * FROM course', function (err, results) {
+  connection.query('SELECT * FROM profile', function (err, results) {
     if (err) throw err;
     res.render('profile', {profile: results });
   });
 });
-
 

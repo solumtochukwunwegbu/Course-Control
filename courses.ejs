@@ -4,40 +4,33 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Courses</title>
-    <link rel="stylesheet" href="courses.css">
+    <link rel="stylesheet" href="courses.css"/>
 </head>
 <body>
-    <div id="Header"></div>
-    <div class="Main">
-        <p id="title">Placeholder</p>
+  <h1><%= course.title %></h1>
+  <p><%= course.description %></p>
+  <a href="/">Back to Course List</a>
+  
+  <script>
+    document.addEventListener('DOMContentLoaded', function() {
+  const courseLinks = document.querySelectorAll('.course-link');
+  const titleInput = document.getElementById('titleInput');
+  const descriptionInput = document.getElementById('descriptionInput');
 
-        <!-- Video wrapper with overlay -->
-        <div class="video-wrapper" onclick="showPaymentPopup()">
-            <div id="videoOverlay" class="video-overlay">
-                <div>Click to unlock video</div>
-            </div>
-            <iframe class="vid" src="https://www.youtube.com/embed/NpEaa2P7qZI"></iframe>
-        </div>
+  courseLinks.forEach(function(link) {
+    link.addEventListener('click', function(event) {
+      event.preventDefault(); // prevent page reload
 
-        <p id="rating">Rating :</p>
-        <p id="description">Description:</p>
-    </div>
+      const title = this.getAttribute('data-title');
+      const description = this.getAttribute('data-description');
 
-    <!-- Payment Popup -->
-    <div id="paymentPopup" class="payment-popup">
-        <button class="close-btn" onclick="closePopup()">×</button>
-        <p>This course requires payment to unlock. Proceed?</p>
-        <button onclick="payAndUnlock()">Pay</button>
-    </div>
-    <div id="Footer"></div>
+      // Inject values into input placeholders or values
+      titleInput.value = title;
+      descriptionInput.value = description;
+    });
+  });
+});
 
-
-    <script src="Layout.js"></script>
-    <script>
-        function showPaymentPopup() { document.getElementById('paymentPopup').style.display = 'block'; }
-        function closePopup() { document.getElementById('paymentPopup').style.display = 'none'; }
-        function payAndUnlock() { document.getElementById('videoOverlay').style.display = 'none'; closePopup(); }
-        
-    </script>
+  </script>
 </body>
 </html>

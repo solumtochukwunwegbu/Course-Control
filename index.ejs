@@ -32,7 +32,8 @@
   <% for (let i = 0; i < course.length; i++) { %>
     <div class="card">
       <img src="<%=course[i].background_img%>" alt="" />
-      <a href="Courses.html?course=<%= course[i].title %>"><%= course[i].title %></a>
+      <!-- <a href="Courses.html?course=<%= course[i].title %>"><%= course[i].title %></a> -->
+      <a href="/courses/<%= course[i].id %>"><%= course[i].title %></a>
       <p><%= course[i].description %></p>
     </div>
   <% } %>
