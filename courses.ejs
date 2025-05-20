@@ -1,36 +1,75 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
+    <meta charset="UTF-8"/>
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Courses</title>
-    <link rel="stylesheet" href="courses.css"/>
+    <link rel="stylesheet" href="/courses.css"/>
+     
 </head>
 <body>
-  <h1><%= course.title %></h1>
-  <p><%= course.description %></p>
-  <a href="/">Back to Course List</a>
   
-  <script>
-    document.addEventListener('DOMContentLoaded', function() {
-  const courseLinks = document.querySelectorAll('.course-link');
-  const titleInput = document.getElementById('titleInput');
-  const descriptionInput = document.getElementById('descriptionInput');
+  <div class="payment-popup" style="display: none;">
+    <button class="close-btn" onclick="closePaymentPopup()">X</button>
+    <h2>Unlock Content</h2>
+    <p>Please pay to unlock this content.</p>
+    <button onclick="payNow()">Pay Now</button>
+  </div>
 
-  courseLinks.forEach(function(link) {
-    link.addEventListener('click', function(event) {
-      event.preventDefault(); // prevent page reload
 
-      const title = this.getAttribute('data-title');
-      const description = this.getAttribute('data-description');
+  <div id="Header"></div>
+  <div class="Main">  
+  <p class="title"><%= course.title %></p>
+  <!-- <p><%= course.description %></p> -->
+  <div class="video-container">
+      <iframe src="<%= course.video.replace('watch?v=', 'embed/') %>" width="100%" height="100%" allowfullscreen frameborder="0" class="video-wrapper"></iframe>
+      
+      <button onclick="showPaymentPopup()" class= "video-overlay">Click to Unlock</button>
+    </div>
+  <p>Rating : <%= course.rating %></p>
+  <p><%= course.fullDescription %></p>
+  <p><a href="/">Back to Course List</a></p>
+    </div>
+    
+  
+  <div id="Footer"></div>
 
-      // Inject values into input placeholders or values
-      titleInput.value = title;
-      descriptionInput.value = description;
-    });
-  });
-});
 
-  </script>
+  
+
+
+<script src="/layout.js"></script>
+<script>
+  function showPaymentPopup() {
+    const popup = document.querySelector('.payment-popup');
+    popup.style.display = 'block';
+  }
+
+  const videoUnlocked = false;
+  function payNow() {
+    alert('Payment successful!');
+    // Process payment
+    sessionStorage.setItem('paymentMade', 'true');
+    removeOverlay();
+    closePaymentPopup();
+  }
+
+  function removeOverlay() {
+    document.querySelector('.video-overlay').style.display = 'none';
+  }
+
+  function closePaymentPopup() {
+    const popup = document.querySelector('.payment-popup');
+    popup.style.display = 'none';
+  }
+
+  // Check if payment has been made on page load
+  window.onload = function() {
+    if (sessionStorage.getItem('paymentMade') === 'true') {
+      document.querySelector('.video-overlay').style.display = 'none';
+      document.querySelector('.payment-popup').style.display = 'none';
+    }
+  }
+</script>
 </body>
 </html>

@@ -3,6 +3,11 @@ const express = require('express');
 const app = express();
 const port = 3000; // You can change the port number
 
+// Start the server and listen on the specified port
+app.listen(port, () => {
+  console.log(`Server is running on http://localhost:`+ port);
+});
+
 
 // Import the sql module
 const mysql = require('mysql2');
@@ -17,6 +22,7 @@ app.set('view engine', 'ejs');
 //Import the bodyParser
 const bodyParser = require("body-parser");
 app.use(bodyParser.urlencoded({extended : true}));
+app.use(bodyParser.json());
 
 
 // Serve the root folder as static
@@ -32,10 +38,10 @@ const connection = mysql.createConnection({
   database: 'coursecontrol'
 });
 
-connection.connect(
-  function(err) {
+connection.connect(function(err) {
   if (err) {
-    throw err;
+    console.warn("\x1b[31m" + "CONNECT TO SQL SERVER!" + "\x1b[0m\x1b[39m");
+    return;
   }
   console.log('Connected to MySQL!');
   }
@@ -44,10 +50,7 @@ connection.connect(
 
 
 
-// Start the server and listen on the specified port
-app.listen(port, () => {
-  console.log(`Server is running on http://localhost:`+ port);
-});
+
 
 
 
@@ -70,43 +73,56 @@ app.get('/', (req, res) => {
   });
 });
 
-app.get('/courses', function(req, res) {
-  res.send('hey');
-  
-  });
 
 
-
-
-
-
-// app.get('/courses/:titleID', (req, res) => {
-//   // const titleID = req.params.titleID;
+// app.get('/courses', function(req, res) {
 //   const sql = 'SELECT * FROM course';
 //   connection.query(sql, (err, results) => {
 //     if (err) throw err;
-
-  // connection.query('SELECT * FROM course WHERE titleID = ?', [titleID], function (err, results) {
-  //   if (err) throw err;
-
-  //   if (results.length === 0) {
-  //     return res.status(404).send('Course not found');
-  //   }
-
-    // Still pass as an array
-//     res.render('courses', { course: results });
+//     res.render('courses',);
 //   });
 // });
 
-
-
-
-
-
-app.get('/profile', function (req, res) {
-  connection.query('SELECT * FROM profile', function (err, results) {
+app.get('/courses/:titleID', function(req, res) {
+  const sql = 'SELECT * FROM course WHERE titleID = ?';
+  connection.query(sql, [req.params.titleID], (err, results) => {
     if (err) throw err;
-    res.render('profile', {profile: results });
+    const course = results[0];
+    // res.render('courses', { course });
+    if (course) {
+      res.render('courses', { course });
+    } else {
+      res.render('courses', { course: {} });
+    }
   });
 });
 
+
+
+
+
+
+// app.get('/profile', function (req, res) {
+//   connection.query('SELECT * FROM profile', function (err, results) {
+//     if (err) throw err;
+//     res.render('profile', {profile: results });
+//   });
+// });
+
+app.post('/submit', (req, res) => {
+  const { username, email, password } = req.body;
+
+  const sql = 'INSERT INTO profile (username, email, password) VALUES (?, ?, ?)';
+  connection.query(sql, [username, email, password], (err, results) => {
+    if (err) throw err;
+    res.json({ message: 'Data saved successfully' });
+  });
+});
+
+app.get('/profile', function (req, res) {
+  connection.query('SELECT * FROM profile ORDER BY userID DESC LIMIT 1', function (err, results) {
+    if (err) throw err;
+    // res.json(results[0]);
+    res.render('profile', { profile: results[0] });
+  });
+});

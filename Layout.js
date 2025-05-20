@@ -87,6 +87,7 @@ function insertLayout() {
     // Insert HTML
     document.getElementById("Header").innerHTML = headerHTML;
     document.getElementById("Footer").innerHTML = footerHTML;
+    console.log("Layout inserted");
   }
   
 

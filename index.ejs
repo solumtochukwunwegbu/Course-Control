@@ -7,25 +7,27 @@
      <link rel="stylesheet" href="index.css" />
 </head>
 <body>
-    <div id="overlay">
-        <!-- Form inside the modal -->
-        <form class="myForm">
-          <!-- <button type="button" id="close-btn" onclick="closeModal()">X</button> -->
-    
-          <label id="label-username" for="username">Username:</label>
-          <input type="text" id="username"><br>
-    
-          <label id="label-email" for="email">Email:</label>
-          <input type="email" id="email"><br>
-    
-          <label id="label-password" for="password">Password:</label>
-          <input type="password" id="password"><br>
-    
-          <button type="button" id="submit-btn" onclick="saveData()">Save</button>
+    <!-- <div id="overlay">
+        
+      <form class="myForm">
+        <label id="label-username" for="username">Username:</label>
+        <input type="text" id="username" placeholder="Username must be between 3-20 characters" required>
+        <p id="username-error"></p>
+        
+        <label id="label-email" for="email">Email:</label>
+        <input type="email" id="email" required>
+        <p id="email-error"></p>
+        
+        <label id="label-password" for="password">Password:</label>
+        <input type="password" id="password" placeholder="Password must be 5-20 characters" required>
+        <p id="password-error"></p>
+        
+        <button id="submit-btn" onclick="saveData(event);">Save</button>
+      </form>
+    </div> -->
 
-        </form>
-      </div>
-    <div id="Header"></div>
+
+ <div id="Header"></div>
         
 
  <div class="container">
@@ -33,55 +35,19 @@
     <div class="card">
       <img src="<%=course[i].background_img%>" alt="" />
       <!-- <a href="Courses.html?course=<%= course[i].title %>"><%= course[i].title %></a> -->
-      <a href="/courses/<%= course[i].id %>"><%= course[i].title %></a>
+      <a href="/courses/<%= course[i].titleID%>"><%= course[i].title %></a>
       <p><%= course[i].description %></p>
     </div>
   <% } %>
-</div>
+ </div>
 
 
-    <div id="Footer"></div>
+ <div id="Footer"></div>
 
     <!-- Your page content -->
 
-    <script src="Layout.js"></script>
-    <script>
-        function saveData() {
-            event.preventDefault();
-    
-            const username = document.getElementById("username").value;
-            const email = document.getElementById("email").value;
-            const password = document.getElementById("password").value;
-    
-            sessionStorage.setItem("username", username);
-            sessionStorage.setItem("email", email);
-            sessionStorage.setItem("password", password);
-    
-            closeModal();
-        }
-    
-        function closeModal() {
-            document.getElementById("overlay").style.display = "none";
-        }
-    
-        window.onload = function () {
-    
-            const username = sessionStorage.getItem("username");
-            const email = sessionStorage.getItem("email");
-            const password = sessionStorage.getItem("password");
-    
-            // if (!username || !email || !password) {
-            //     document.getElementById("overlay").style.display = "flex";
-            // } else {
-            //     document.getElementById("overlay").style.display = "none";
-            // }
-               if (!username || !email || !password) {
-                document.getElementById("overlay").style.display = "flex";
-            }
-        };
- 
-    </script>
-    
+    <script src="layout.js"></script>
+    <script src="index.js"></script>
     
 </body>
 </html>
