@@ -1,83 +1,164 @@
-   
-    function saveData(event) {
-      // Get form data
-      event.preventDefault();
-      const username = document.getElementById("username").value;
-      const email = document.getElementById("email").value;
-      const password = document.getElementById("password").value;
+const signupForm = document.getElementById("signup-form");
+const loginForm = document.getElementById("login-form");
+const toggleLink = document.getElementById("toggle-link");
+const formTitle = document.getElementById("form-title");
+const errorMessage = document.getElementById("error-message");
+const toggleText = document.getElementById("toggle-text");
 
-      document.getElementById("username-error").textContent = "";
-      document.getElementById("email-error").textContent = "";
-      document.getElementById("password-error").textContent = ""; 
-      
-      // Validate username ( Udemy-like requirements )
-      const usernameRegex = /^[a-zA-Z0-9._-]/;
-      if (!usernameRegex.test(username) || username.length < 3 || username.length > 20) {
-        // alert("Username must be between 3-20 characters, and can only contain letters, numbers, periods, underscores, and hyphens.");
-        document.getElementById("username-error").textContent = "Username must be between 3-20 characters, and can only contain letters, numbers, periods, underscores, and hyphens.";  
-        return;
-      }
+// Form toggle logic
+toggleLink.addEventListener("click", function (e) {
+  e.preventDefault();
 
-      // Validate email format
-      const emailRegex = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
-      if (!emailRegex.test(email)) {
-        // alert("Invalid email format. Please enter a valid email address.");
-        document.getElementById("email-error").textContent = "Invalid email format. Please enter a valid email address.";
-        return;
-      }
+  const isLogin = loginForm.style.display === "block";
 
-      // Validate password length
-      if (password.length < 5) {
-        // alert("Password must be at least 5 characters long.");
-        document.getElementById("password-error").textContent = "Password must be at least 5 characters long.";
-        return;
-      }
-      
-      if(password.length > 20){
-        // alert("Password must be at most 20 characters long.");
-        document.getElementById("password-error").textContent = "Password must be at most 20 characters long.";
-        return;
-      } 
-      
-      
-            fetch("/submit", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json"
-        },
-        body: JSON.stringify({ username, email, password })
-      })
-        .then(response => response.json())
-        .then(data => {
-          console.log(data);
-        })
-        .catch(error => {
-          console.error(error);
-        });
+  if (isLogin) {
+    loginForm.style.display = "none";
+    signupForm.style.display = "block";
+    toggleLink.textContent = "Login";
+    formTitle.textContent = "Signup";
+    toggleText.textContent = "Already have an account?";
+  } else {
+    signupForm.style.display = "none";
+    loginForm.style.display = "block";
+    toggleLink.textContent = "Signup";
+    formTitle.textContent = "Login";
+    toggleText.textContent = "Don't have an account?";
+  }
 
-      // If all inputs are valid, save data to sessionStorage
-      sessionStorage.setItem("username", username);
-      sessionStorage.setItem("email", email);
-      sessionStorage.setItem("password", password);
+  errorMessage.textContent = ""; // clear previous errors
+});
 
-      document.getElementById("overlay").style.display = "none";
+// ===================
+// Helper Validation Functions
+// ===================
 
-
-
-
+function isValidEmail(email) {
+  return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email);
 }
 
+function isValidUsername(username) {
+  return /^[a-zA-Z0-9_]{3,15}$/.test(username); // simple username rule
+}
 
-    
-     window.onload = function () {
-    
-            const username = sessionStorage.getItem("username");
-            const email = sessionStorage.getItem("email");
-            const password = sessionStorage.getItem("password");
-    
-               if (!username || !email || !password) {
-                document.getElementById("overlay").style.display = "flex";
-            }
-        };
- 
-  
+// ===================
+// Signup Submit
+// ===================
+
+signupForm.addEventListener("submit", async function (event) {
+  event.preventDefault();
+
+  const username = document.getElementById("signup-username").value.trim();
+  const email = document.getElementById("signup-email").value.trim();
+  const password = document.getElementById("signup-password").value;
+
+  // Frontend Validation
+  const errors = [];
+  if (!username) {
+    errors.push("Please enter a username.");
+  } else if (!isValidUsername(username)) {
+    errors.push("Username must be 3–15 characters (letters, numbers, or _ only).");
+  }
+
+  if (!email) {
+    errors.push("Please enter your email.");
+  } else if (!isValidEmail(email)) {
+    errors.push("Please enter a valid email address.");
+  }
+
+  if (!password) {
+    errors.push("Please enter a password.");
+  } else if (password.length < 8) {
+    errors.push("Password must be at least 8 characters long.");
+  }
+
+  if (errors.length > 0) {
+    errorMessage.textContent = errors.join("\n");
+    return;
+  }
+
+  // Backend Request
+  try {
+    const res = await fetch("/signup", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ username, email, password })
+    });
+
+    const data = await res.json();
+    if (data.message === 'Username already exists') {
+      errorMessage.textContent = "That username is already taken. Please choose another.";
+    } 
+    else {
+      alert("Signed up successfully!");
+      signupForm.reset();
+      // Optionally redirect or switch to login form
+    }
+  } catch (error) {
+    errorMessage.textContent = "Something went wrong. Please try again later.";
+  }
+});
+
+// ===================
+// Login Submit
+// ===================
+
+loginForm.addEventListener("submit", async function (event) {
+  event.preventDefault();
+
+  const email = document.getElementById("login-email").value.trim();
+  const password = document.getElementById("login-password").value;
+
+  // Frontend Validation
+  const errors = [];
+  if (!email) {
+    errors.push("Please enter your email.");
+  } else if (!isValidEmail(email)) {
+    errors.push("Please enter a valid email address.");
+  }
+
+  if (!password) {
+    errors.push("Please enter your password.");
+  }
+
+  if (errors.length > 0) {
+    errorMessage.textContent = errors.join(". ");
+    return;
+  }
+
+  // Backend Request
+  try {
+    const res = await fetch("/login", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ email, password })
+    });
+
+    const data = await res.json();
+    if (data.success) {
+      alert("Login successful!");
+      loginForm.reset();
+      window.location.href = "/"; // Redirect after login
+    } else {
+      errorMessage.textContent = data.message || "Incorrect email or password.";
+    }
+  } catch (error) {
+    errorMessage.textContent = "Something went wrong. Please try again later.";
+  }
+});
+
+// ===================
+// Overlay Logic (optional)
+// ===================
+
+window.onload = function () {
+  const username = sessionStorage.getItem("username");
+  const email = sessionStorage.getItem("email");
+  const password = sessionStorage.getItem("password");
+
+  if (!username || !email || !password) {
+    const overlay = document.getElementById("overlay");
+    if (overlay) {
+      overlay.style.display = "flex";
+    }
+  }
+};

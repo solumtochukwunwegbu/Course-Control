@@ -78,8 +78,8 @@ function insertLayout() {
     <footer class="site-footer">
     <p>&copy; 2025 Course Control</p>
     <p>
-      Email: <a>coursecontrol@gmail.com</a> |
-      Phone: <a>+1 (234) 567-890</a>
+      Email: coursecontrol@gmail.com |
+      Phone: +1 (234) 567-890
     </p>
     </footer>
     `;

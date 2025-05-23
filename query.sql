@@ -36,6 +36,7 @@ WHERE title = 'History';
 
 SELECT * FROM profile;
 
+delete from profile;
 delete from profile where userID = 1;
 desc profile;
 

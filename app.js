@@ -3,11 +3,6 @@ const express = require('express');
 const app = express();
 const port = 3000; // You can change the port number
 
-// Start the server and listen on the specified port
-app.listen(port, () => {
-  console.log(`Server is running on http://localhost:`+ port);
-});
-
 
 // Import the sql module
 const mysql = require('mysql2');
@@ -75,13 +70,7 @@ app.get('/', (req, res) => {
 
 
 
-// app.get('/courses', function(req, res) {
-//   const sql = 'SELECT * FROM course';
-//   connection.query(sql, (err, results) => {
-//     if (err) throw err;
-//     res.render('courses',);
-//   });
-// });
+
 
 app.get('/courses/:titleID', function(req, res) {
   const sql = 'SELECT * FROM course WHERE titleID = ?';
@@ -98,26 +87,50 @@ app.get('/courses/:titleID', function(req, res) {
 });
 
 
-
-
-
-
-// app.get('/profile', function (req, res) {
-//   connection.query('SELECT * FROM profile', function (err, results) {
-//     if (err) throw err;
-//     res.render('profile', {profile: results });
-//   });
-// });
-
-app.post('/submit', (req, res) => {
+app.post('/signup', (req, res) => {
   const { username, email, password } = req.body;
 
-  const sql = 'INSERT INTO profile (username, email, password) VALUES (?, ?, ?)';
-  connection.query(sql, [username, email, password], (err, results) => {
-    if (err) throw err;
-    res.json({ message: 'Data saved successfully' });
+  const sqlCheck = 'SELECT * FROM profile WHERE username = ?';
+  connection.query(sqlCheck, [username], (err, results) => {
+    if (err) {
+      console.error(err);
+      return res.status(500).json({ message: 'Database error' });
+    }
+
+    if (results.length > 0) {
+      return res.json({ message: 'Username already exists' });
+    } else {
+      const sqlInsert = 'INSERT INTO profile (username, email, password) VALUES (?, ?, ?)';
+      connection.query(sqlInsert, [username, email, password], (err, results) => {
+        if (err) {
+          console.error(err);
+          return res.status(500).json({ message: 'Database error' });
+        }
+        res.json({ message: 'Data saved successfully' });
+      });
+    }
   });
 });
+
+
+
+
+app.post("/login", (req, res) => {
+  const { email, password } = req.body;
+
+  const sql = 'SELECT * FROM profile WHERE email = ? AND password = ?';
+  connection.query(sql, [email, password], (err, results) => {
+    if (err) throw err;
+
+    if (results.length > 0) {
+      res.json({ success: true });
+    } else {
+      res.json({ success: false, message: 'Invalid email or password' });
+    }
+  });
+});
+
+
 
 app.get('/profile', function (req, res) {
   connection.query('SELECT * FROM profile ORDER BY userID DESC LIMIT 1', function (err, results) {
@@ -126,3 +139,17 @@ app.get('/profile', function (req, res) {
     res.render('profile', { profile: results[0] });
   });
 });
+
+
+
+
+
+
+
+
+
+// Start the server and listen on the specified port
+app.listen(port, () => {
+  console.log(`Server is running on http://localhost:`+ port);
+});
+
