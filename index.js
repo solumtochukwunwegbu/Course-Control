@@ -15,7 +15,7 @@ toggleLink.addEventListener("click", function (e) {
     loginForm.style.display = "none";
     signupForm.style.display = "block";
     toggleLink.textContent = "Login";
-    formTitle.textContent = "Signup";
+    formTitle.textContent = "Register To Get Started!";
     toggleText.textContent = "Already have an account?";
   } else {
     signupForm.style.display = "none";
@@ -92,6 +92,7 @@ signupForm.addEventListener("submit", async function (event) {
       alert("Signed up successfully!");
       signupForm.reset();
       // Optionally redirect or switch to login form
+      document.querySelector('.wrapper').style.display = 'none';
     }
   } catch (error) {
     errorMessage.textContent = "Something went wrong. Please try again later.";
@@ -138,6 +139,7 @@ loginForm.addEventListener("submit", async function (event) {
       alert("Login successful!");
       loginForm.reset();
       window.location.href = "/"; // Redirect after login
+      document.querySelector('.wrapper').style.display = 'none';
     } else {
       errorMessage.textContent = data.message || "Incorrect email or password.";
     }
@@ -156,7 +158,7 @@ window.onload = function () {
   const password = sessionStorage.getItem("password");
 
   if (!username || !email || !password) {
-    const overlay = document.getElementById("overlay");
+    const overlay = document.getElementsByClassName('wrapper')[0];
     if (overlay) {
       overlay.style.display = "flex";
     }

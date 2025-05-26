@@ -1,11 +1,11 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8"/>
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Courses</title>
-    <link rel="stylesheet" href="/courses.css"/>
-    <script src="https://js.paystack.co/v1/inline.js"></script>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Courses</title>
+  <link rel="stylesheet" href="/courses.css"/>
+  <script src="https://js.paystack.co/v1/inline.js"></script>
 </head>
 <body>
   
@@ -14,54 +14,72 @@
     <h2>Unlock Content</h2>
     <p>Please pay to unlock this content.</p>
     <form id="payment-form">
-      <input type="text" name="email" placeholder="Email Address">
-      <input type="number" name="amount" placeholder="Amount">
-      <button type="submit" onclick="makePayment()">Pay Now</button>
+      <input type="email" name="email" placeholder="Email Address" required>
+      <input type="number" name="amount" placeholder="Amount (NGN)" min="1" required>
+      <button type="submit">Pay Now</button>
     </form>
   </div>
 
   <div id="Header"></div>
-  <div class="Main">  
-  <p class="title"><%= course.title %></p>
-  <!-- <p><%= course.description %></p> -->
-  <div class="video-container">
-      <iframe src="<%= course.video.replace('watch?v=', 'embed/') %>" width="100%" height="100%" allowfullscreen frameborder="0" class="video-wrapper"></iframe>
-      
-      <button onclick="showPaymentPopup()" class= "video-overlay">Click to Unlock</button>
-    </div>
-  <p>Rating : <%= course.rating %></p>
-  <p><%= course.fullDescription %></p>
-  <p><a href="/">Back to Course List</a></p>
-    </div>
-    
-  
-  <div id="Footer"></div>
 
+  <div class="Main">  
+    <p class="title"><%= course.title %></p>
+    <!-- <p><%= course.description %></p> -->
+    <div class="video-container">
+      <iframe src="<%= course.video.replace('watch?v=', 'embed/') %>" width="100%" height="100%" allowfullscreen frameborder="0" class="video-wrapper"></iframe>
+      <button onclick="showPaymentPopup()" class="video-overlay">Click to Unlock</button>
+    </div>
+    <p>Rating : <%= course.rating %></p>
+    <p><%= course.fullDescription %></p>
+    <p><a href="/">Back to Course List</a></p>
+  </div>
+
+  <div id="Footer"></div>
 
   <script src="/layout.js"></script>
   <script>
     function showPaymentPopup() {
-      const popup = document.querySelector('.payment-popup');
-      popup.style.display = 'block';
-    }
-
-    function makePayment() {
-      const email = document.querySelector('input[name="email"]').value;
-      const amount = document.querySelector('input[name="amount"]').value;
-      const payment = new Paystack({
-        key: 'sk_live_4f8ffdda0876a8d7679316f7942acc9f36cbc1b7',
-        email: email,
-        amount: amount,
-      });
-      payment.open();
+      document.querySelector('.payment-popup').style.display = 'block';
     }
 
     function closePaymentPopup() {
       const popup = document.querySelector('.payment-popup');
       popup.style.display = 'none';
+      // Clear form fields on close
+      popup.querySelector('form').reset();
     }
 
-    // Check if payment has been made on page load
+    function makePayment(email, amount) {
+      const handler = PaystackPop.setup({
+        key: 'pk_live_eafcb81eb81e0759e77fbbc3fe141c13cae7332e', // <-- Replace with your **public** key
+        email: email,
+        amount: amount * 100, // Convert to kobo
+        onClose: function() {
+          alert('Payment popup closed.');
+        },
+        callback: function(response) {
+          alert('Payment complete! Reference: ' + response.reference);
+          sessionStorage.setItem('paymentMade', 'true');
+          document.querySelector('.video-overlay').style.display = 'none';
+          closePaymentPopup();
+        }
+      });
+      handler.openIframe();
+    }
+
+    // Attach submit handler to payment form
+    document.getElementById('payment-form').addEventListener('submit', function(e) {
+      e.preventDefault();
+      const email = this.email.value.trim();
+      const amount = Number(this.amount.value);
+      if (!email || !amount || amount <= 0) {
+        alert('Please enter a valid email and amount.');
+        return;
+      }
+      makePayment(email, amount);
+    });
+
+    // On page load check if payment made
     window.onload = function() {
       if (sessionStorage.getItem('paymentMade') === 'true') {
         document.querySelector('.video-overlay').style.display = 'none';

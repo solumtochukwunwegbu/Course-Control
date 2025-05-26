@@ -35,7 +35,7 @@ WHERE title = 'History';
 -- UPDATE course SET  video = 'https://www.youtube.com/watch?v=dQw4w9WgXcQ' WHERE video = 'https://youtu.be/Cxilfg-M158?si=1p9ZPx9mFF93tAW7';
 
 SELECT * FROM profile;
-
+-- drop TABLE profile;
 delete from profile;
 delete from profile where userID = 1;
 desc profile;

@@ -8,6 +8,7 @@ function insertLayout() {
               align-items: center;
               color: white;
               justify-content: space-between;
+              margin-inline: 60px; 
             }
             
             .logo {

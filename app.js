@@ -142,6 +142,31 @@ app.get('/profile', function (req, res) {
 
 
 
+const axios = require('axios');
+
+const transfer = async (req, res) => {
+  try {
+    const response = await axios.post(
+      'https://api.paystack.co/transfer',
+      {
+        source: 'balance',
+        amount: 500000, // amount in kobo
+        recipient: 'RCP_xxxxxxxx',
+        reason: 'Payment for services',
+      },
+      {
+        headers: {
+          Authorization: 'Bearer sk_test_XXXXXXXXXXXXXXXXX',
+          'Content-Type': 'application/json',
+        },
+      }
+    );
+
+    res.json(response.data);
+  } catch (err) {
+    res.status(500).json({ error: err.message });
+  }
+};
 
 
 
