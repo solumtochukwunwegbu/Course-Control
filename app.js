@@ -10,8 +10,11 @@ const mysql = require('mysql2');
 
 // Import the ejs module
 const path = require('path');
-app.set('views', path.join(__dirname)); // This makes Express look in the root folder
+app.set('views', path.join(__dirname, 'views'));
+app.use(express.static(path.join(__dirname, 'public')));
 app.set('view engine', 'ejs');
+
+
 
 
 //Import the bodyParser
@@ -20,8 +23,7 @@ app.use(bodyParser.urlencoded({extended : true}));
 app.use(bodyParser.json());
 
 
-// Serve the root folder as static
-app.use(express.static(__dirname));
+
 
 
 
@@ -45,6 +47,19 @@ connection.connect(function(err) {
 
 
 
+// Import epress-session module
+
+const session = require('express-session');
+
+app.use(session({
+  secret: 'your-secret-key', // Change this to a strong secret in production
+  resave: false,
+  saveUninitialized: false,
+  cookie: {
+    secure: false, // Set to true in production if using HTTPS
+    maxAge: 24 * 60 * 60 * 1000 // 1 day
+  }
+}));
 
 
 
@@ -120,10 +135,12 @@ app.post("/login", (req, res) => {
 
   const sql = 'SELECT * FROM profile WHERE email = ? AND password = ?';
   connection.query(sql, [email, password], (err, results) => {
-    if (err) throw err;
+    if (err) return res.status(500).json({ message: 'Database error' });
 
     if (results.length > 0) {
-      res.json({ success: true });
+     req.session.profile = results[0]; // Contains everything, including password
+
+     res.json({ success: true });
     } else {
       res.json({ success: false, message: 'Invalid email or password' });
     }
@@ -132,31 +149,37 @@ app.post("/login", (req, res) => {
 
 
 
-app.get('/profile', function (req, res) {
-  connection.query('SELECT * FROM profile ORDER BY userID DESC LIMIT 1', function (err, results) {
-    if (err) throw err;
-    // res.json(results[0]);
-    res.render('profile', { profile: results[0] });
-  });
+
+app.get('/profile', (req, res) => {
+  if (!req.session.profile) {
+    return res.redirect('/');  // or wherever
+  }
+  // user is logged in, render profile
+  res.render('profile', { profile: req.session.profile });
 });
 
 
 
+
+
+
+
 const axios = require('axios');
+const { profile } = require('console');
 
 const transfer = async (req, res) => {
   try {
+
     const response = await axios.post(
-      'https://api.paystack.co/transfer',
+      'https://api.paystack.co/transaction/initialize',
       {
-        source: 'balance',
-        amount: 500000, // amount in kobo
-        recipient: 'RCP_xxxxxxxx',
+        email: email,
+        // amount: 500000, // amount in kobo
         reason: 'Payment for services',
       },
       {
         headers: {
-          Authorization: 'Bearer sk_test_XXXXXXXXXXXXXXXXX',
+          Authorization: 'Bearer sk_test_8e8c742d421d7ea4caf2b3fc392ef207ecf44440',
           'Content-Type': 'application/json',
         },
       }

@@ -1,0 +1,95 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Courses</title>
+  <link rel="stylesheet" href="/courses.css"/>
+  <script src="https://js.paystack.co/v1/inline.js"></script>
+</head>
+<body>
+  
+  <div class="payment-popup" style="display: none;">
+    <button class="close-btn" onclick="closePaymentPopup()">X</button>
+    <h2>Unlock Content</h2>
+    <p>Please pay to unlock this content.</p>
+    <form id="payment-form">
+      <input type="email" name="email" placeholder="Email Address" class="email" required>
+      <!-- Pass price as a data attribute -->
+      <!-- <input type="hidden" id="course-price" value="<%= course.price %>"> -->
+      <p id="course-price">₦ <%= course.price %></p>
+
+      <button type="submit">Pay Now</button>
+    </form>
+  </div>
+
+  <div id="Header"></div>
+
+  <div class="Main">  
+    <p class="title"><%= course.title %></p>
+    <!-- <p><%= course.description %></p> -->
+    <div class="video-container">
+      <iframe src="<%= course.video.replace('watch?v=', 'embed/') %>" width="100%" height="100%" allowfullscreen frameborder="0" class="video-wrapper"></iframe>
+      <button onclick="showPaymentPopup()" class="video-overlay">Click to Unlock</button>
+    </div>
+    <p>Rating : <%= course.rating %></p>
+    <p class="desc" ><%= course.fullDescription %></p>
+    <p><a href="/">Back to Course List</a></p>
+  </div>
+
+  <div id="Footer"></div>
+
+  <script src="/layout.js"></script>
+  <script>
+    
+    function showPaymentPopup() {
+      document.querySelector('.payment-popup').style.display = 'block';
+    }
+
+    function closePaymentPopup() {
+      const popup = document.querySelector('.payment-popup');
+      popup.style.display = 'none';
+      // Clear form fields on close
+      popup.querySelector('form').reset();
+    }
+
+    function makePayment(email) {
+      const handler = PaystackPop.setup({
+        key: 'pk_test_82d6382e24fe7bd0f96087c73b15c91eb2112609', // <-- Replace with your **public** key
+        email: email,
+        amount: (document.getElementById('course-price').textContent.replace('₦', '')) * 100, // Convert to kobo
+        onClose: function() {
+          alert('Payment popup closed.');
+        },
+        callback: function(response) {
+          alert('Payment complete! Reference: ' + response.reference);
+          sessionStorage.setItem('paymentMade', 'true');
+          document.querySelector('.video-overlay').style.display = 'none';
+          closePaymentPopup();
+        }
+      });
+      handler.openIframe();
+    }
+
+
+    // Attach submit handler to payment form
+    document.getElementById('payment-form').addEventListener('submit', function(e) {
+      e.preventDefault();
+      const email = this.email.value.trim();
+      if (!email) {
+        alert('Please enter a valid email.');
+        return;
+      }
+      makePayment(email);
+    });
+
+    // On page load check if payment made
+    window.onload = function() {
+      if (sessionStorage.getItem('paymentMade') === 'true') {
+        document.querySelector('.video-overlay').style.display = 'none';
+        document.querySelector('.payment-popup').style.display = 'none';
+      }
+    }
+  </script>
+</body>
+</html>
