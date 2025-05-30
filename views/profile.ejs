@@ -10,7 +10,10 @@
 <body>
     <div id="Header"></div>
     <div class="profile-card">
-        <img src="https://www.profilebakery.com/wp-content/uploads/2023/04/ai-professional-headshot-6.jpg" alt="">
+        <img id="profile-pic" src="<%= profile.profilePic ? '/uploads/' + profile.profilePic + '?t=' + Date.now() : 'https://www.profilebakery.com/wp-content/uploads/2023/04/ai-professional-headshot-6.jpg' %>" alt="">
+
+          <label for="profile-input">Upload</label>  
+          <input type="file" accept="image/jpg, image/jpeg, image/png" id="profile-input" name="profile-input"> 
         <div>
             <h2>username: <p> <%= profile.username %></p></h2>
             <h2>email: <p><%= profile.email %></p></h2>
@@ -21,6 +24,27 @@
     
     
     <script src="Layout.js"></script>
-    
+   <script>
+        const profileInput = document.getElementById("profile-input");
+        const profilePic = document.getElementById("profile-pic");
+
+        profileInput.addEventListener("change", () => {
+            profilePic.src = URL.createObjectURL(profileInput.files[0]);
+            uploadProfilePicture(profileInput.files[0]);
+        });
+
+        function uploadProfilePicture(file) {
+            const formData = new FormData();
+            formData.append('profile-picture', file);
+
+            fetch('/upload-profile-picture', {
+                method: 'POST',
+                body: formData,
+            })
+            .then((response) => response.json())
+            .then((data) => console.log(data))
+            .catch((error) => console.error(error));
+        }
+    </script>
 </body>
 </html>

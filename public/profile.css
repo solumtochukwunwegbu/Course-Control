@@ -19,3 +19,17 @@
 .profile-card p{
    margin-inline-end:  10px;
 }
+
+
+#profile-input{
+    display: none;
+}
+
+label{
+    padding: 10px;
+    background-color: #0066cc;
+    color: white;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+}

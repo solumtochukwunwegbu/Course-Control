@@ -1,7 +1,10 @@
 // Import the express module
 const express = require('express');
+const path = require('path');
 const app = express();
 const port = 3000; // You can change the port number
+app.use('/uploads', express.static(path.join(__dirname, 'uploads')));
+
 
 
 // Import the sql module
@@ -9,7 +12,6 @@ const mysql = require('mysql2');
 
 
 // Import the ejs module
-const path = require('path');
 app.set('views', path.join(__dirname, 'views'));
 app.use(express.static(path.join(__dirname, 'public')));
 app.set('view engine', 'ejs');
@@ -17,11 +19,16 @@ app.set('view engine', 'ejs');
 
 
 
+
+// Import the multer module
+const multer = require('multer');
+const upload = multer({ dest: 'uploads/' });
+
+
 //Import the bodyParser
 const bodyParser = require("body-parser");
 app.use(bodyParser.urlencoded({extended : true}));
 app.use(bodyParser.json());
-
 
 
 
@@ -150,13 +157,58 @@ app.post("/login", (req, res) => {
 
 
 
+// app.get('/profile', (req, res) => {
+//   if (!req.session.profile) {
+//     return res.redirect('/');  
+//   }
+ 
+//   res.render('profile', { profile: req.session.profile });
+// });
 app.get('/profile', (req, res) => {
   if (!req.session.profile) {
-    return res.redirect('/');  // or wherever
+    return res.redirect('/');
   }
-  // user is logged in, render profile
-  res.render('profile', { profile: req.session.profile });
+
+  const userID = req.session.profile.userID;
+  const sql = 'SELECT * FROM profile WHERE userID = ?';
+
+  connection.query(sql, [userID], (err, results) => {
+    if (err) {
+      console.error(err);
+      return res.status(500).send("Database error");
+    }
+
+    if (results.length > 0) {
+      req.session.profile = results[0]; // Refresh session data
+      res.render('profile', { profile: results[0] });
+    } else {
+      res.status(404).send("User not found");
+    }
+  });
 });
+
+
+
+
+
+app.post('/upload-profile-picture', upload.single('profile-picture'), (req, res) => {
+    const file = req.file;
+    const userID = req.session.profile.userID;
+
+    const sql = 'UPDATE profile SET profilePic = ? WHERE userID = ?';
+    connection.query(sql, [file.filename, userID], (err, results) => {
+        if (err) {
+            console.error(err);
+            return res.status(500).json({ message: 'Database error' });
+        }
+
+        // Update the session object with new profilePic
+        req.session.profile.profilePicture = file.filename;
+
+        res.json({ message: 'Profile picture uploaded successfully' });
+    });
+});
+
 
 
 
@@ -190,7 +242,6 @@ const transfer = async (req, res) => {
     res.status(500).json({ error: err.message });
   }
 };
-
 
 
 
