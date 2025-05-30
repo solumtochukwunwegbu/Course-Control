@@ -104,15 +104,21 @@ a:hover {
 
 .payment-popup .close-btn {
   position: absolute;
-  top: 10px;
+  top: 3px;
   right: 10px;
   cursor: pointer;
   background-color: transparent;
   border: none;
   color: #666;
-  font-size: 16px;
+  font-size: 15px;
   font-weight: bolder;
+  padding: 10px;
 }
+
+.payment-popup .close-btn:hover {
+  /* color: white; */
+  background-color: #f7f7f7;
+} 
 
 .payment-popup h2 {
   font-weight: bold;
