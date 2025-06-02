@@ -204,17 +204,61 @@ app.post('/upload-profile-picture', upload.single('profile-picture'), (req, res)
 
 
 
+
+
+
+
+
+
+
+const fs = require('fs');
+  // const path = require('path');
+
 app.post('/remove-profile-picture', (req, res) => {
     const userID = req.session.profile.userID;
-    const sql = 'UPDATE profile SET profilePic = NULL WHERE userID = ?';
-    connection.query(sql, [userID], (err, results) => {
+
+    // First, get the current profilePic filename
+    const sqlGetPic = 'SELECT profilePic FROM profile WHERE userID = ?';
+    connection.query(sqlGetPic, [userID], (err, results) => {
         if (err) {
             console.error(err);
             return res.status(500).json({ message: 'Database error' });
         }
-        res.json({ message: 'Profile picture removed successfully' });
+
+        const filename = results[0]?.profilePic;
+
+        if (!filename) {
+            // No file to delete, just respond success
+            return res.json({ message: 'No profile picture to delete' });
+        }
+
+        // Construct full path
+        const filePath = path.join(__dirname, 'uploads', filename);
+
+        // Delete the file
+        fs.unlink(filePath, (err) => {
+            if (err) {
+                console.error('Error deleting file:', err);
+                // You might want to continue anyway or handle error differently
+            }
+
+      // Now update DB to remove the filename
+      const sqlUpdate = 'UPDATE profile SET profilePic = NULL WHERE userID = ?';
+      connection.query(sqlUpdate, [userID], (err2) => {
+          if (err2) {
+              console.error(err2);
+              return res.status(500).json({ message: 'Database error' });
+          }
+
+          // Update session
+          req.session.profile.profilePic = null;
+
+          res.json({ message: 'Profile picture removed successfully' });
+      });
+        });
     });
 });
+
 
 
 
