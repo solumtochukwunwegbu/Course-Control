@@ -8,7 +8,7 @@
 }
 
 .profile-card img{
-    border-radius: 20px;
+    border-radius: 100%;
     overflow: hidden; /* prevents image from poking out */
     width: 300px;
     height: 300px;
@@ -25,11 +25,21 @@
     display: none;
 }
 
-label{
-    padding: 10px;
-    background-color: #0066cc;
+label, #remove-profile-pic {
+    box-sizing: border-box; /* Ensures padding is included in width/height */
+    width: 100px;
+    height: 30px;
+
+    padding: 5px 10px; /* Adjust padding to fit inside the fixed height */
+    background-color: #606264;
     color: white;
     border: none;
     border-radius: 5px;
     cursor: pointer;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+    font-size: 14px;
+    line-height: 1;
 }

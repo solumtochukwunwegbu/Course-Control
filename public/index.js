@@ -90,7 +90,7 @@ signupForm.addEventListener("submit", async function (event) {
     if (data.message === "Username already exists") {
       errorMessage.textContent = "That username is already taken. Please choose another.";
     } else {
-      alert("Signed up successfully!");
+      // alert("Signed up successfully!");
       signupForm.reset();
       document.querySelector(".wrapper").style.display = "none";
     }
@@ -136,7 +136,7 @@ loginForm.addEventListener("submit", async function (event) {
     if (data.success) {
   sessionStorage.setItem("isLoggedIn", "true");
 
-  alert("Login successful!");
+  // alert("Login successful!");
   loginForm.reset();
 
   // Hide overlay

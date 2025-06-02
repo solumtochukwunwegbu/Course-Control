@@ -10,41 +10,67 @@
 <body>
     <div id="Header"></div>
     <div class="profile-card">
-        <img id="profile-pic" src="<%= profile.profilePic ? '/uploads/' + profile.profilePic + '?t=' + Date.now() : 'https://www.profilebakery.com/wp-content/uploads/2023/04/ai-professional-headshot-6.jpg' %>" alt="">
+    <img id="profile-pic" src="<%= profile.profilePic ? '/uploads/' + profile.profilePic + '?t=' + Date.now() : 'placeholder_img/istockphoto-1327592420-612x612.jpg' %>" alt="">
 
-          <label for="profile-input">Upload</label>  
-          <input type="file" accept="image/jpg, image/jpeg, image/png" id="profile-input" name="profile-input"> 
-        <div>
-            <h2>username: <p> <%= profile.username %></p></h2>
-            <h2>email: <p><%= profile.email %></p></h2>
-            <h2>password: <p><%= "*".repeat(profile.password.length) %></p></h2>
-        </div>
+    <div>
+        <label for="profile-input">Upload</label>  
+        <input type="file" accept="image/jpg, image/jpeg, image/png" id="profile-input" name="profile-input"> 
+
+        <button id="remove-profile-pic">Delete</button>
     </div>
+
+    <div>
+        <h2>username: <p> <%= profile.username %></p></h2>
+        <h2>email: <p><%= profile.email %></p></h2>
+        <h2>password: <p><%= "*".repeat(profile.password.length) %></p></h2>
+    </div>
+</div>
     <div id="Footer"></div>
     
     
     <script src="Layout.js"></script>
    <script>
         const profileInput = document.getElementById("profile-input");
-        const profilePic = document.getElementById("profile-pic");
+const profilePic = document.getElementById("profile-pic");
+const removeProfilePicButton = document.getElementById("remove-profile-pic");
 
-        profileInput.addEventListener("change", () => {
-            profilePic.src = URL.createObjectURL(profileInput.files[0]);
-            uploadProfilePicture(profileInput.files[0]);
-        });
+profileInput.addEventListener("change", () => {
+    profilePic.src = URL.createObjectURL(profileInput.files[0]);
+    uploadProfilePicture(profileInput.files[0]);
+});
 
-        function uploadProfilePicture(file) {
-            const formData = new FormData();
-            formData.append('profile-picture', file);
+removeProfilePicButton.addEventListener("click", () => {
+    removeProfilePicture();
+});
 
-            fetch('/upload-profile-picture', {
-                method: 'POST',
-                body: formData,
-            })
-            .then((response) => response.json())
-            .then((data) => console.log(data))
-            .catch((error) => console.error(error));
-        }
+function uploadProfilePicture(file) {
+    const formData = new FormData();
+    formData.append('profile-picture', file);
+
+    fetch('/upload-profile-picture', {
+        method: 'POST',
+        body: formData,
+    })
+    .then((response) => response.json())
+    .then((data) => console.log(data))
+    .catch((error) => console.error(error));
+}
+
+function removeProfilePicture() {
+    fetch('/remove-profile-picture', {
+    method: 'POST',
+})
+.then(response => {
+    if (!response.ok) throw new Error("Server error");
+    return response.json();
+})
+.then(data => {
+    console.log(data);
+    profilePic.src = 'placeholder_img/istockphoto-1327592420-612x612.jpg';
+})
+.catch((error) => console.error("Remove failed:", error));
+
+}
     </script>
 </body>
 </html>

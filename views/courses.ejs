@@ -29,7 +29,14 @@
     <p class="title"><%= course.title %></p>
     <!-- <p><%= course.description %></p> -->
     <div class="video-container">
-      <iframe src="<%= course.video.replace('watch?v=', 'embed/') %>" width="100%" height="100%" allowfullscreen frameborder="0" class="video-wrapper"></iframe>
+      <iframe 
+        width="560" 
+        height="315" 
+        src="https://www.youtube.com/embed/VIDEO_ID" 
+        frameborder="0" 
+        allowfullscreen>
+      </iframe>
+
       <button onclick="showPaymentPopup()" class="video-overlay">Click to Unlock</button>
     </div>
     <p>Rating : <%= course.rating %></p>

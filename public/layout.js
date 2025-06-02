@@ -39,6 +39,7 @@ function insertLayout() {
             .site-footer {
               text-align: center;
               padding: 20px;
+              margin-inline: 20px;
               margin-top: 40px;
               background-color: #242424;
               border-top: solid white 1px;
@@ -80,7 +81,7 @@ function insertLayout() {
     <p>&copy; 2025 Course Control</p>
     <p>
       Email: coursecontrol@gmail.com |
-      Phone: +1 (234) 567-890
+      Phone: +234 90 567 890
     </p>
     </footer>
     `;

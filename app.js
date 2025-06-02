@@ -121,7 +121,8 @@ app.post('/signup', (req, res) => {
 
     if (results.length > 0) {
       return res.json({ message: 'Username already exists' });
-    } else {
+    }
+     else {
       const sqlInsert = 'INSERT INTO profile (username, email, password) VALUES (?, ?, ?)';
       connection.query(sqlInsert, [username, email, password], (err, results) => {
         if (err) {
@@ -156,14 +157,6 @@ app.post("/login", (req, res) => {
 
 
 
-
-// app.get('/profile', (req, res) => {
-//   if (!req.session.profile) {
-//     return res.redirect('/');  
-//   }
- 
-//   res.render('profile', { profile: req.session.profile });
-// });
 app.get('/profile', (req, res) => {
   if (!req.session.profile) {
     return res.redirect('/');
@@ -206,6 +199,20 @@ app.post('/upload-profile-picture', upload.single('profile-picture'), (req, res)
         req.session.profile.profilePicture = file.filename;
 
         res.json({ message: 'Profile picture uploaded successfully' });
+      });
+    });
+
+
+
+app.post('/remove-profile-picture', (req, res) => {
+    const userID = req.session.profile.userID;
+    const sql = 'UPDATE profile SET profilePic = NULL WHERE userID = ?';
+    connection.query(sql, [userID], (err, results) => {
+        if (err) {
+            console.error(err);
+            return res.status(500).json({ message: 'Database error' });
+        }
+        res.json({ message: 'Profile picture removed successfully' });
     });
 });
 
@@ -213,11 +220,10 @@ app.post('/upload-profile-picture', upload.single('profile-picture'), (req, res)
 
 
 
-
-
-
 const axios = require('axios');
 const { profile } = require('console');
+const { link } = require('fs');
+const { Script } = require('vm');
 
 const transfer = async (req, res) => {
   try {
@@ -251,4 +257,5 @@ const transfer = async (req, res) => {
 app.listen(port, () => {
   console.log(`Server is running on http://localhost:`+ port);
 });
+
 
